@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontendencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Run frontend
+        run: npm run lint
+        working-directory: frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+
+      - name: Install backenddencies
+        run: npm ci
+        working-directory: backend
+
+      - name: Run backend
+        run: npm test
+        working-directory: backend
