@@ -3,9 +3,14 @@ import mongoose from 'mongoose';
 const columnSchema = new mongoose.Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
+  sub: { type: String },
+  burnType: { type: String },
   iconName: { type: String },
-  color: { type: String }
-}, { _id: false });
+  color: { type: String },
+  bg: { type: String },
+  createdAt: { type: String },
+  deletedAt: { type: String }
+}, { _id: false, strict: false });
 
 const todoSchema = new mongoose.Schema({
   id: { type: String, required: true },

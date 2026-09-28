@@ -196,7 +196,7 @@ export default function TrackerPage() {
     fetch(API, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => {
-        if (data.columns && data.columns.length > 0) {
+        if (data.columns) {
           setColumns(hydrateColumns(data.columns));
         }
         if (data.checked) {
@@ -987,55 +987,90 @@ export default function TrackerPage() {
       )}
 
       {/* ── Outer Layout ──────────────────────────────── */}
-      <div className="w-[98vw] h-[95vh] flex">
+      <div className="w-full h-full md:w-[98vw] md:h-[95vh] flex flex-col md:flex-row relative overflow-hidden">
 
-        {/* Spiral Spine */}
-        <div className="w-10 bg-[#3a3530] rounded-l-xl flex flex-col justify-around items-center py-4 z-10 shadow-lg border-r border-[#2d2925] shrink-0">
+        {/* Spiral Spine (Desktop only) */}
+        <div className="hidden md:flex w-10 bg-[#3a3530] rounded-l-xl flex-col justify-around items-center py-4 z-10 shadow-lg border-r border-[#2d2925] shrink-0">
           {Array.from({ length: 14 }).map((_, i) => (
             <div key={i} className="w-7 h-3.5 bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 rounded-full shadow-inner border border-gray-500 transform -rotate-12" />
           ))}
         </div>
 
-        {/* Notebook Page */}
-        <div className="flex-1 bg-[#fffcf5] rounded-l-xl flex flex-col shadow-[0_20px_60px_rgba(0,0,0,0.25)] overflow-hidden border border-[#cbd5e1] border-r-0">
+        {/* Mobile Top Notebook Strip */}
+        <div className="flex md:hidden w-full h-2.5 bg-[#3a3530] shrink-0 flex justify-around items-center px-4">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="w-4 h-1.5 bg-gray-300 rounded-full" />
+          ))}
+        </div>
 
-          {/* ── Header ─────────────────────────────────── */}
-          <div className="px-6 py-3 shrink-0 flex justify-between items-center border-b border-[#cbd5e1]">
-            <div className="flex items-center gap-3">
-              <img
-                src={user?.picture || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user?.email || 'User')}`}
-                alt="Profile"
-                className="w-9 h-9 rounded-full object-cover border border-[#cbd5e1] shadow-sm"
-              />
-              <div className="flex flex-col">
-                <span className="text-sm font-bold text-[#172554] leading-tight">{user?.name || user?.email?.split('@')[0]}</span>
-                {saving ? (
-                  <span className="text-[10px] text-[#6366f1] font-semibold animate-pulse">saving…</span>
-                ) : (
-                  <span className="text-[10px] text-[#7c8499] font-medium">online</span>
-                )}
+        {/* Notebook Page */}
+        <div className="flex-1 bg-[#fffcf5] rounded-none md:rounded-l-xl flex flex-col shadow-none md:shadow-[0_20px_60px_rgba(0,0,0,0.25)] overflow-hidden border-0 md:border md:border-[#cbd5e1] md:border-r-0 w-full h-full">
+
+          {/* ── Responsive Header ─────────────────────────────────── */}
+          <div className="px-3 sm:px-6 py-2 sm:py-3 shrink-0 flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#cbd5e1] bg-[#fffcf5] gap-2">
+            
+            {/* Top row: Profile on Left, Actions (AI + Logout) on Right */}
+            <div className="flex items-center justify-between w-full sm:w-auto gap-2">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <img
+                  src={user?.picture || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(user?.email || 'User')}`}
+                  alt="Profile"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-[#cbd5e1] shadow-sm shrink-0"
+                />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs sm:text-sm font-bold text-[#172554] leading-tight truncate max-w-[130px] sm:max-w-none">
+                    {user?.name || user?.email?.split('@')[0]}
+                  </span>
+                  {saving ? (
+                    <span className="text-[9px] sm:text-[10px] text-[#6366f1] font-semibold animate-pulse">saving…</span>
+                  ) : (
+                    <span className="text-[9px] sm:text-[10px] text-[#7c8499] font-medium">online</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Action buttons (AI + Logout) */}
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => setShowAiModal(true)}
+                  className="flex items-center gap-1 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 text-white rounded-full px-2.5 sm:px-3.5 py-1 text-xs font-bold shadow-sm hover:shadow-indigo-500/25 active:scale-95 transition-all cursor-pointer"
+                  title="Open AI Data Analysis & Coach"
+                >
+                  <span className="text-amber-300 text-xs">✨</span>
+                  <span className="hidden xs:inline">AI Analysis</span>
+                  <span className="inline xs:hidden">AI</span>
+                </button>
+
+                <button
+                  onClick={handleLogout}
+                  title="Log Out"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-[#cbd5e1] text-[#7c8499] hover:text-[#172554] flex items-center justify-center shadow-sm active:scale-95 transition-all cursor-pointer"
+                >
+                  <FiLogOut size={13} strokeWidth={2.5} />
+                </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
+            {/* Bottom/Middle section: Date/Tab Pill Bar */}
+            <div className="flex items-center justify-center sm:justify-end gap-2 w-full sm:w-auto shrink-0 pt-0.5 sm:pt-0">
               {activeTab === 'THIS WEEK' && (
-                <div className="flex items-center gap-1.5 bg-white border border-[#cbd5e1] rounded-full px-3 py-1.5 shadow-sm text-sm text-[#172554] font-medium">
-                  <FiCalendar size={13} className="text-[#6366f1]" />
-                  <span className="text-xs">{weekLabel}</span>
-                  {weekOffset > -8 && ( // 60 days approx = 8 weeks
+                <div className="flex items-center gap-1 sm:gap-1.5 bg-white border border-[#cbd5e1] rounded-full px-2.5 sm:px-3 py-1 shadow-sm text-xs text-[#172554] font-medium">
+                  <FiCalendar size={12} className="text-[#6366f1] shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-bold text-[#172554] whitespace-nowrap">{weekLabel}</span>
+                  {weekOffset > -8 && (
                     <button
                       onClick={() => setWeekOffset(w => w - 1)}
                       title="Previous Week"
-                      className="hover:bg-[#dcfce7] rounded-full p-0.5 transition-colors cursor-pointer"
+                      className="hover:bg-[#dcfce7] rounded-full p-0.5 transition-colors cursor-pointer ml-1"
                     >
-                      <FiChevronLeft size={11} />
+                      <FiChevronLeft size={12} />
                     </button>
                   )}
                   {weekOffset !== 0 && (
                     <button
                       onClick={() => setWeekOffset(0)}
                       title="Go to current week"
-                      className="px-1 py-0.5 rounded text-[9px] bg-green-200 text-green-800 hover:bg-green-300 font-bold ml-0.5 cursor-pointer"
+                      className="px-1.5 py-0.5 rounded text-[9px] bg-green-200 text-green-800 hover:bg-green-300 font-bold ml-0.5 cursor-pointer"
                     >
                       Today
                     </button>
@@ -1044,16 +1079,16 @@ export default function TrackerPage() {
                     <button
                       onClick={() => setWeekOffset(w => w + 1)}
                       title="Next Week"
-                      className="hover:bg-[#dcfce7] rounded-full p-0.5 ml-1 transition-colors cursor-pointer"
+                      className="hover:bg-[#dcfce7] rounded-full p-0.5 ml-0.5 transition-colors cursor-pointer"
                     >
-                      <FiChevronRight size={11} />
+                      <FiChevronRight size={12} />
                     </button>
                   )}
                 </div>
               )}
 
               {activeTab === 'TO-DO LIST' && (
-                <div className="flex items-center gap-2 bg-[#fdf2f8] border border-[#fbcfe8] rounded-full px-3 py-1 text-xs font-bold text-[#ec4899]">
+                <div className="flex items-center gap-1.5 bg-[#fdf2f8] border border-[#fbcfe8] rounded-full px-3 py-1 text-xs font-bold text-[#ec4899]">
                   <FiCheckSquare size={13} />
                   <span>{completedTodosCount} of {todos.length} Done</span>
                 </div>
@@ -1079,25 +1114,37 @@ export default function TrackerPage() {
                   </button>
                 </div>
               )}
-
-              {/* ✨ AI Analysis Button */}
-              <button
-                onClick={() => setShowAiModal(true)}
-                className="flex items-center gap-1.5 bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-700 hover:via-indigo-700 hover:to-purple-700 text-white rounded-full px-3.5 py-1 text-xs font-bold shadow-md hover:shadow-indigo-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                title="Open AI Data Analysis & Coach"
-              >
-                <span className="text-amber-300 text-xs">✨</span>
-                <span>AI Analysis</span>
-              </button>
-
-              <button
-                onClick={handleLogout}
-                title="Log Out"
-                className="w-8 h-8 rounded-full bg-white border border-[#cbd5e1] text-[#7c8499] hover:text-[#172554] flex items-center justify-center shadow-sm hover:scale-105 transition-all"
-              >
-                <FiLogOut size={14} strokeWidth={2.5} />
-              </button>
             </div>
+          </div>
+
+          {/* ── Horizontal Scrollable Tab Bar for Mobile ── */}
+          <div className="flex md:hidden overflow-x-auto px-2 py-1.5 bg-[#f8f5ee] border-b border-[#cbd5e1] gap-1.5 scrollbar-none shrink-0">
+            {[
+              { id: 'THIS WEEK', label: 'This Week', icon: FiCalendar, color: '#6366f1' },
+              { id: 'TO-DO LIST', label: 'To-Do List', icon: FiCheckSquare, color: '#ec4899' },
+              { id: 'MONTHLY EXP', label: 'Expenses', icon: FiDollarSign, color: '#10b981' },
+              { id: 'STATS', label: 'Stats', icon: FiPieChart, color: '#22c55e' },
+              { id: 'GOALS', label: 'Goals', icon: FiTarget, color: '#f59e0b' },
+              { id: 'NOTES', label: 'Notes', icon: FiFileText, color: '#8b5cf6' },
+            ].map(tab => {
+              const isActive = activeTab === tab.id;
+              const IconComp = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                    isActive
+                      ? 'text-white shadow-sm scale-105'
+                      : 'bg-white text-[#64748b] border border-[#e2e8f0] hover:text-[#172554]'
+                  }`}
+                  style={isActive ? { background: tab.color } : {}}
+                >
+                  <IconComp size={12} />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* ── Active Tab View Content ─────────────────── */}
@@ -1126,7 +1173,7 @@ export default function TrackerPage() {
 
             {/* TAB 2: TO-DO LIST + NOT TO-DO (Split View) */}
             {activeTab === 'TO-DO LIST' && (
-              <div className="p-5 h-full flex gap-5 overflow-hidden">
+              <div className="p-3 sm:p-5 h-full flex flex-col md:flex-row gap-4 sm:gap-5 overflow-y-auto md:overflow-hidden">
 
                 {/* ── LEFT: TO-DO LIST ─────────────────────────── */}
                 <div className="flex-1 flex flex-col min-w-0 bg-white rounded-2xl border border-[#e2e8f0] shadow-sm overflow-hidden">
@@ -1251,7 +1298,7 @@ export default function TrackerPage() {
                 </div>
 
                 {/* ── DIVIDER ──────────────────────────────────── */}
-                <div className="flex flex-col items-center justify-center gap-1 shrink-0">
+                <div className="hidden md:flex flex-col items-center justify-center gap-1 shrink-0">
                   <div className="w-px flex-1 bg-gradient-to-b from-transparent via-[#cbd5e1] to-transparent" />
                   <div className="w-8 h-8 rounded-full bg-[#f1f5f9] border border-[#e2e8f0] flex items-center justify-center text-sm shadow-sm">
                     ⚡
@@ -1339,7 +1386,7 @@ export default function TrackerPage() {
 
             {/* TAB 4: MONTHLY EXPENSE VIEW */}
             {activeTab === 'MONTHLY EXP' && (
-              <div className="p-6 w-full h-full flex flex-col md:flex-row gap-6 overflow-hidden">
+              <div className="p-3 sm:p-6 w-full h-full flex flex-col md:flex-row gap-4 sm:gap-6 overflow-y-auto md:overflow-hidden">
 
                 {/* LEFT SIDE: Fixed Control & Budget Panel */}
                 <div className="w-full md:w-1/2 flex flex-col gap-4 overflow-y-auto pr-1">
@@ -1706,16 +1753,16 @@ export default function TrackerPage() {
           </div>
 
           {/* ── Bottom Bar: Progress + Motivation ──────── */}
-          <div className="shrink-0 border-t border-[#ede8db] px-5 py-2 flex items-center justify-between bg-[#faf8f0] gap-4">
+          <div className="shrink-0 border-t border-[#ede8db] px-3 sm:px-5 py-2 flex items-center justify-between bg-[#faf8f0] gap-2 sm:gap-4">
 
             <div className="hidden md:flex items-center gap-1.5 bg-[#fef9c3] border border-[#fde68a] rounded-xl px-4 py-2 shadow-sm relative text-xs">
               <FiStar size={12} className="text-[#facc15]" />
               <p className="font-bold text-[#172554]">Small steps every day lead to big results. 😊</p>
             </div>
 
-            <div className="flex items-center gap-3 bg-white border border-[#ede8db] rounded-xl px-4 py-1.5 shadow-sm min-w-[220px]">
-              <div className="relative w-10 h-10 shrink-0">
-                <svg className="w-10 h-10 -rotate-90" viewBox="0 0 60 60">
+            <div className="flex items-center gap-2.5 sm:gap-3 bg-white border border-[#ede8db] rounded-xl px-3 sm:px-4 py-1.5 shadow-sm w-full sm:w-auto sm:min-w-[220px]">
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10 shrink-0">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 -rotate-90" viewBox="0 0 60 60">
                   <circle cx="30" cy="30" r="26" fill="none" stroke="#ede8db" strokeWidth="4" />
                   <circle
                     cx="30" cy="30" r="26" fill="none"
@@ -1725,9 +1772,9 @@ export default function TrackerPage() {
                     className="transition-all duration-700"
                   />
                 </svg>
-                <span className="absolute inset-0 flex items-center justify-center text-xs font-extrabold text-[#172554]">{pct}%</span>
+                <span className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-xs font-extrabold text-[#172554]">{pct}%</span>
               </div>
-              <div>
+              <div className="flex-1 sm:flex-initial">
                 <p className="text-xs font-bold text-[#172554] leading-tight">Weekly Progress</p>
                 <p className="text-[10px] text-[#7c8499] mt-0.5">{checkedCount} of {totalCells} completed</p>
               </div>
@@ -1740,8 +1787,8 @@ export default function TrackerPage() {
           </div>
         </div>
 
-        {/* ── Notebook Tabs (right side) ──────────────── */}
-        <div className="flex flex-col justify-center gap-1 shrink-0">
+        {/* ── Notebook Tabs (right side - Desktop only) ──────────────── */}
+        <div className="hidden md:flex flex-col justify-center gap-1 shrink-0">
           {NOTEBOOK_TABS.map((tab, i) => {
             const isActive = activeTab === tab;
             return (

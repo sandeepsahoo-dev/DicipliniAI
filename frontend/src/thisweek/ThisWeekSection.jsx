@@ -10,6 +10,8 @@ export default function ThisWeekSection({
   editName,
   setEditName,
   startRename,
+  saveRename,
+  handleRenameKey,
   deleteList,
   reorderList,
   openModal,
