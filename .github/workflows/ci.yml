@@ -1,10 +1,9 @@
-
 name: Discipline OS CI/CD
 
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
   backend-ci:
@@ -12,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 22
 
