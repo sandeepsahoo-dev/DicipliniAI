@@ -3,20 +3,15 @@ name: Discipline OS CI/CD
 on:
   push:
     branches:
-      - main 
+      - ai 
 
 jobs:
-  backend-ci:
+  push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Setup NodeJS
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
-      - name: Check Node Version
-        run: node --version
+      - name: Run test
+        run: echo "Github action is woring when push ai branch "
