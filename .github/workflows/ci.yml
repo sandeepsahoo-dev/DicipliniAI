@@ -1,17 +1,14 @@
-name: Discipline OS CI/CD
+name: merge branch
 
-on:
-  push:
-    branches:
-      - ai 
+on: 
+ push:
+  branches:
+   main
 
 jobs:
-  push:
-    runs-on: ubuntu-latest
+ my-job:
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Run test
-        run: echo "Github action is woring when push ai branch "
+  steps: 
+   - name: first steps
+     run: echo" hello world"   
