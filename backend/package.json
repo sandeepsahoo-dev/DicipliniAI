@@ -7,7 +7,12 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+<<<<<<< HEAD
     "test": "jest"
+=======
+    "test": "vitest run",
+    "test:watch": "vitest"
+>>>>>>> ai
   },
   "keywords": [],
   "author": "",
@@ -22,8 +27,15 @@
     "mongoose": "^9.9.2"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "jest": "^30.5.2",
     "nodemon": "^3.1.14",
     "supertest": "^7.3.0"
+=======
+    "mongodb-memory-server": "^10.4.3",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.3.2",
+    "vitest": "^4.1.12"
+>>>>>>> ai
   }
 }

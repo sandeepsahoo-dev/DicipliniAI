@@ -15,6 +15,9 @@ jobs:
       - name: Say Hello
         run: echo "Hello Sandeep! GitHub Actions is working."
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Show current date
         run: date
 
