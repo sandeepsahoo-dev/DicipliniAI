@@ -1,22 +1,23 @@
-name: Dicipline OS CI/CD
+
+name: Discipline OS CI/CD
 
 on:
- push:
-  branches:
-   - main
+  push:
+    branches:
+      - main
 
 jobs:
- backend-ci:
-  runs-on: ubuntu-latest
+  backend-ci:
+    runs-on: ubuntu-latest
 
-  steps:
-   -name: Checkout Reposortery
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-   -name: setup NodeJs
-    uses: actions/setup-node@v4
-    with:
-     node-version: 22
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-   -name: check node version
-    run: node --version
+      - name: Check Node Version
+        run: node --version
