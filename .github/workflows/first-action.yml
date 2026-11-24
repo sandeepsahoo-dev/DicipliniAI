@@ -3,17 +3,15 @@ name: My First GitHub Action
 on:
   push:
     branches:
-      - main
       - ai
 
 jobs:
-  first-job:
-
+  push:
     runs-on: ubuntu-latest
 
     steps:
       - name: Say Hello
-        run: echo "Hello Sandeep! GitHub Actions is working."
+        run: echo "Hello Sandeep! GitHub Actions is working for ai branch ."
 
       - name: Install dependencies
         run: npm ci
