@@ -1,0 +1,36 @@
+
+name: My First GitHub Action
+
+on:
+  push:
+    branches:
+      - ai
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Say Hello
+        run: echo "Hello Sandeep! GitHub Actions is working for ai branch."
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Show current date
+        run: date
+
+      - name: Show Node version
+        run: node --version
