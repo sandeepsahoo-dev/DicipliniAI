@@ -13,7 +13,7 @@ router.post('/chat', async (req, res) => {
     const { message, history = [] } = req.body;
 
     if (!message || !message.trim()) {
-      return res.status(400).json({ message: 'Message is required' });
+      return res.status(400).json({ message: 'Messageeeeeee is required' });
     }
 
     const apiKey = process.env.OPENROUTER_API_KEY || process.env.OPEN_ROUTER_API_KEY || process.env.OPENAI_API_KEY;
