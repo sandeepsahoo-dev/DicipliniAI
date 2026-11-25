@@ -1,7 +1,6 @@
 
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
-import jwt from 'jsonwebtoken';
 import app from '../app.js';
 
 describe('Discipline OS Authentication API', () => {
