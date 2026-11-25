@@ -1,14 +1,35 @@
-name: merge branch
 
-on: 
- push:
-  branches:
-   main
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - main
 
 jobs:
- my-job:
-  runs-on: ubuntu-latest
+  backend-ci:
+    runs-on: ubuntu-latest
 
-  steps: 
-   - name: first steps
-     run: echo" hello world"   
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm test
